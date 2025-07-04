@@ -4,11 +4,11 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name =  "gvp"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     {name = "Martanto", email = "martanto@live.com"},
 ]
-description = "The Smithsonian Institution's Global Volcanism Program (GVP) is housed in the Department of Mineral Sciences, National Museum of Natural History, in Washington D.C. We are devoted to a better understanding of Earth's active volcanoes and their eruptions during the last 10,000 years."
+description = "The Volcanoes of the World database is a catalog of Holocene and Pleistocene volcanoes, and eruptions from the past 12,000 years."
 readme = "README.md"
 license = {file = "LICENSE"}
 keywords = ["gvp", "volcano", "volcanism", "observatory", "volcanoes", "volcanic", "unrest", "database", "holocene"]
