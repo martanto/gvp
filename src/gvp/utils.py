@@ -21,7 +21,7 @@ def fix_file(filepath: str) -> str:
     return new_filename
 
 
-def slugify(string: str, separator: "-") -> str:
+def slugify(string: str, separator: str = "-") -> str:
     """Slugify a string.
 
     Args:

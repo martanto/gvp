@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import os
+import gvp
 from time import sleep
 from typing_extensions import Self
 from .utils import fix_file, slugify
@@ -12,8 +13,6 @@ class GVP:
     _url = "https://volcano.si.edu/database/list_volcano_holocene_excel.cfm"
 
     def __init__(self, output_dir: str = None, verbose: bool = False):
-        self.response = None
-
         self.output_dir = output_dir
         if output_dir is None:
             self.output_dir = os.path.join(os.getcwd(), "output")
@@ -26,7 +25,7 @@ class GVP:
         os.makedirs(self.download_dir, exist_ok=True)
 
         self.file: str | None = None
-
+        self.response = None
         self.verbose: bool = verbose
 
         # Private property
@@ -34,6 +33,8 @@ class GVP:
         self.df: pd.DataFrame = pd.DataFrame()
 
         # Validate
+        print(f"Version: {gvp.__version__}")
+        print(f"Maintained by: {gvp.__author__}")
 
     @property
     def url(self):
@@ -124,4 +125,4 @@ class GVP:
             self.load_df(self.file)
             return self
 
-        raise ValueError(f"❌ Response error: {response}")
+        raise ValueError(f"❌ Cannot download data: {response}")
