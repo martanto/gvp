@@ -3,38 +3,39 @@ import pandas as pd
 import os
 import gvp
 from time import sleep
-from typing_extensions import Self
+from typing_extensions import Self, Optional
+from importlib_resources import files
 from .utils import fix_file, slugify
+from .query import Query
 
 
-class GVP:
+class GVP(Query):
     """Global Volcanism Program (GVP) class."""
 
     _url = "https://volcano.si.edu/database/list_volcano_holocene_excel.cfm"
+    _database_version = "5.2.8"
+    _database_version_url = "https://volcano.si.edu/database/database_version.cfm"
 
-    def __init__(self, output_dir: str = None, verbose: bool = False):
-        self.output_dir = output_dir
-        if output_dir is None:
-            self.output_dir = os.path.join(os.getcwd(), "output")
-            os.makedirs(self.output_dir, exist_ok=True)
+    def __init__(self, verbose: bool = False):
+        print(f"Version: {gvp.__version__}")
+        print(f"Maintained by: {gvp.__author__}")
 
+        self.output_dir = os.path.join(os.getcwd(), "output")
         self.gvp_dir = os.path.join(self.output_dir, "gvp")
-        os.makedirs(self.gvp_dir, exist_ok=True)
-
         self.download_dir = os.path.join(self.gvp_dir, "download")
-        os.makedirs(self.download_dir, exist_ok=True)
 
-        self.file: str | None = None
+        self.file: Optional[str] = None
         self.response = None
         self.verbose: bool = verbose
+        self.database_version = self._database_version
+        self.database_url = self._database_version_url
+        self.df: pd.DataFrame = self._load_df()
 
         # Private property
         self._url = GVP._url
-        self.df: pd.DataFrame = pd.DataFrame()
 
         # Validate
-        print(f"Version: {gvp.__version__}")
-        print(f"Maintained by: {gvp.__author__}")
+        super().__init__(self.df)
 
     @property
     def url(self):
@@ -44,11 +45,25 @@ class GVP:
     def url(self, url: str):
         self._url = url
 
-    def load_df(self, file: str = None) -> Self:
+    def _load_df(self) -> pd.DataFrame:
+        """Initiate GVP dataframe from package.
+
+        Returns:
+            pd.DataFrame: GVP dataframe
+        """
+        if self.verbose:
+            print(f"ℹ️ Database version: {self.database_version}")
+            print(f"ℹ️ Database version URL: {self.database_url} ")
+
+        self.file = str(files("gvp.resources").joinpath("gvp_202507041754.xlsx"))
+        df = pd.read_excel(self.file)
+        return df
+
+    def load_df(self, file: Optional[str] = None) -> Self:
         """Load a Pandas DataFrame from a file.
 
         Args:
-            file (str): Path to the file to load. Defaults to None.
+            file (str, optional): Path to the file to load. Defaults to None.
 
         Returns:
             self: GVP class
@@ -56,13 +71,13 @@ class GVP:
         if file is None:
             file = self.file
 
-        df = pd.read_excel(file, skiprows=1)
+        df = pd.read_excel(file, skiprows=1, engine="openpyxl")
 
         # Renaming column
         columns_list = df.columns.tolist()
         columns = {}
         for column in columns_list:
-            columns[column] = slugify(column, "_")
+            columns[column] = slugify(str(column), "_")
         df.rename(columns=columns, inplace=True)
 
         # Save a new Data Frame
@@ -75,16 +90,29 @@ class GVP:
         self.df = df
         return self
 
-    def download(self, retries: int = 10, timeout: int = 3) -> Self | None:
+    def download(
+        self,
+        output_dir: Optional[str] = None,
+        retries: int = 10,
+        timeout: int = 3,
+        fix: bool = False,
+    ) -> Self | None:
         """Download Global Volcanism Program (GVP) database as an Excel file.
 
         Args:
+            output_dir (str, optional): Output directory. Defaults to None.
             retries (int, optional): Number of times to retry download. Defaults to 10.
             timeout (int, optional): Timeout in seconds. Defaults to 3 seconds.
+            fix (bool, optional): Fix corrupted file. Defaults to False.
 
         Returns:
             str | None: Path to downloaded file.
         """
+        if output_dir is None:
+            output_dir = self.output_dir
+        download_dir = os.path.join(output_dir, self.gvp_dir, "download")
+        os.makedirs(download_dir, exist_ok=True)
+
         response = self.response
 
         # Attempting to download file
@@ -116,13 +144,16 @@ class GVP:
             with open(file_path, mode="wb") as file:
                 file.write(response.content)
 
-            self.file = fix_file(file_path)
+            # Try to fix downloaded Excel file
+            if fix:
+                self.file = fix_file(file_path)
+                self.load_df(self.file)
+
             self.response = response
 
             if self.verbose:
-                print(f"✅ Downloaded file : {self.file}")
+                print(f"✅ Downloaded file : {file_path}")
 
-            self.load_df(self.file)
             return self
 
         raise ValueError(f"❌ Cannot download data: {response}")

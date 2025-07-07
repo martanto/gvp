@@ -1,5 +1,4 @@
 import os, re
-import win32com.client as win32
 
 
 def fix_file(filepath: str) -> str:
@@ -11,14 +10,22 @@ def fix_file(filepath: str) -> str:
     Returns:
         str: Path to the downloaded Excel file.
     """
-    excel = win32.gencache.EnsureDispatch("Excel.Application")
-    workbook = excel.Workbooks.Open(filepath)
-    new_filename = filepath + "x"
-    workbook.SaveAs(new_filename, FileFormat=51)
-    workbook.Close()
-    excel.Application.Quit()
-    os.remove(filepath)
-    return new_filename
+    try:
+        import win32com.client as win32
+
+        new_filename = filepath + "x"
+        excel = win32.gencache.EnsureDispatch("Excel.Application")
+        workbook = excel.Workbooks.Open(filepath)
+        workbook.SaveAs(new_filename, FileFormat=51)
+        workbook.Close()
+        excel.Application.Quit()
+        os.remove(filepath)
+        return new_filename
+    except ImportError as e:
+        print(
+            f"⚠️ Cannot fix broken Excel file. Please fix it manually using MS Excel. {e}"
+        )
+        return filepath
 
 
 def slugify(string: str, separator: str = "-") -> str:

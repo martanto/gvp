@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name =  "gvp"
-version = "0.0.3"
+version = "0.0.5"
 authors = [
     {name = "Martanto", email = "martanto@live.com"},
 ]
@@ -17,9 +17,7 @@ dependencies = [
     "xlsxwriter>=3.2.5",
     "openpyxl>=3.1.5",
     "pandas>=2.2.2",
-    "numpy>=2.2.5",
-    "matplotlib>=3.9.0",
-    "peewee>=3.17.5",
+    "importlib-resources",
 ]
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -34,9 +32,7 @@ base = [
     "xlsxwriter",
     "openpyxl",
     "pandas",
-    "numpy",
-    "matplotlib",
-    "peewee",
+    "importlib-resources"
 ]
 
 [project.urls]
