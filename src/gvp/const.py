@@ -1,4 +1,7 @@
+# Standard library imports
 import os
+
+# Third party imports
 from typing_extensions import Tuple
 
 user_directory: str = os.path.join(os.path.expanduser("~"))

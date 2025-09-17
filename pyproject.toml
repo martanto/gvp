@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name =  "gvp"
-version = "0.0.5"
+version = "0.1.0"
 authors = [
     {name = "Martanto", email = "martanto@live.com"},
 ]
@@ -28,11 +28,45 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-base = [
+dev = [
+    "isort",
+    "black[d]",
     "xlsxwriter",
     "openpyxl",
     "pandas",
     "importlib-resources"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310','py311','py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | examples
+  | output
+  | _build
+  | build
+  | dist
+  | venv
+  | \.env
+  | \.flake8
+)/
+'''
+
+[tool.isort]
+profile = "black"
+src_paths = ["src"]
+import_heading_stdlib = "Standard library imports"
+import_heading_thirdparty = "Third party imports"
+import_heading_firstparty = "Project imports"
+known_first_party = [
+	"gvp",
+]
+known_third_party = [
+    "pandas",
 ]
 
 [project.urls]

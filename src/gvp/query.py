@@ -1,6 +1,13 @@
+# Standard library imports
+import functools
+from typing import Literal
+
+# Third party imports
 import pandas as pd
-from typing_extensions import Any, Self, List
-from .validator import validate_comparator, validate_column_name
+from typing_extensions import Any, List, Self
+
+# Project imports
+from gvp.validator import validate_column_name, validate_comparator
 
 
 class Query:
@@ -64,6 +71,7 @@ class Query:
         """
         return len(self.get())
 
+    @functools.cache
     def select_columns(self, column_names: str | List[str] = None) -> Self:
         """Select columns
 
@@ -90,6 +98,7 @@ class Query:
 
         return self
 
+    @functools.cache
     def where(self, column_name: str, comparator: str, value: Any) -> Self:
         """Filter data based on column value
 
@@ -107,18 +116,19 @@ class Query:
         self.df = self.compare(column_name, comparator, value)
         return self
 
-    def unique(self, column_name: str) -> pd.DataFrame:
+    def unique(self, column_name: str, inplace: Literal[False] = False) -> pd.DataFrame:
         """Get ALL unique values from a column.
 
         Args:
-            column_name: Column name of GVP table.
+            column_name (str): Column name of GVP table.
+            inplace (bool, optional): Inplace current Dataframe
 
         Returns:
             pd.DataFrame: All unique values from a column.
         """
         assert len(self.df) > 0, ValueError("❌ DataFrame is empty")
         df = pd.DataFrame(self.df[column_name].unique(), columns=[column_name])
-        df.dropna(inplace=True)
+        df.dropna(inplace=inplace)
         return df
 
     def get(self, inplace: bool = True) -> pd.DataFrame:

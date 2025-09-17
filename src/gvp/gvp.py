@@ -1,26 +1,32 @@
-import requests
-import pandas as pd
+# Standard library imports
 import os
-import gvp
+from functools import cached_property
 from time import sleep
-from typing_extensions import Self, Optional
+
+# Third party imports
+import pandas as pd
+import requests
 from importlib_resources import files
-from .utils import fix_file, slugify
-from .query import Query
+from typing_extensions import Optional, Self
+
+# Project imports
+import gvp
+from gvp.query import Query
+from gvp.utils import fix_file, slugify
 
 
 class GVP(Query):
     """Global Volcanism Program (GVP) class."""
 
     _url = "https://volcano.si.edu/database/list_volcano_holocene_excel.cfm"
-    _database_version = "5.2.8"
+    _database_version = "v5.3.1; 6 Aug 2025"
     _database_version_url = "https://volcano.si.edu/database/database_version.cfm"
 
-    def __init__(self, verbose: bool = False):
-        print(f"Version: {gvp.__version__}")
+    def __init__(self, output_dir: Optional[str] = None, verbose: bool = False):
+        print(f"Current Version: {gvp.__version__}")
         print(f"Maintained by: {gvp.__author__}")
 
-        self.output_dir = os.path.join(os.getcwd(), "output")
+        self.output_dir = output_dir or os.path.join(os.getcwd(), "output")
         self.gvp_dir = os.path.join(self.output_dir, "gvp")
         self.download_dir = os.path.join(self.gvp_dir, "download")
 
@@ -29,7 +35,9 @@ class GVP(Query):
         self.verbose: bool = verbose
         self.database_version = self._database_version
         self.database_url = self._database_version_url
-        self.df: pd.DataFrame = self._load_df()
+
+        print(f"GVP Database version: {self.database_version}")
+        print(f"Total data: {len(self.df)}")
 
         # Private property
         self._url = GVP._url
@@ -45,16 +53,16 @@ class GVP(Query):
     def url(self, url: str):
         self._url = url
 
+    @cached_property
+    def df(self) -> pd.DataFrame:
+        return self._load_df()
+
     def _load_df(self) -> pd.DataFrame:
         """Initiate GVP dataframe from package.
 
         Returns:
             pd.DataFrame: GVP dataframe
         """
-        if self.verbose:
-            print(f"ℹ️ Database version: {self.database_version}")
-            print(f"ℹ️ Database version URL: {self.database_url} ")
-
         self.file = str(files("gvp.resources").joinpath("gvp_202507041754.xlsx"))
         df = pd.read_excel(self.file)
         return df

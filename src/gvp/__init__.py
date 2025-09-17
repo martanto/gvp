@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Third party imports
 from pkg_resources import get_distribution
-from .gvp import GVP
 
 __version__ = get_distribution("gvp").version
 __author__ = "Martanto"
@@ -17,5 +17,4 @@ __all__ = [
     "__author_email__",
     "__license__",
     "__copyright__",
-    "GVP",
 ]
