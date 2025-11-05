@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pkg_resources import get_distribution
-from .gvp import GVP
+# Third party imports
+from importlib.metadata import version
 
-__version__ = get_distribution("gvp").version
+__version__ = version("gvp")
 __author__ = "Martanto"
 __author_email__ = "martanto@live.com"
 __license__ = "MIT"
@@ -17,5 +17,4 @@ __all__ = [
     "__author_email__",
     "__license__",
     "__copyright__",
-    "GVP",
 ]

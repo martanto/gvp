@@ -1,4 +1,5 @@
-from .const import COMPARATORS
+# Project imports
+from gvp.const import COMPARATORS
 
 
 def validate_comparator(comparator: str) -> bool | Exception:

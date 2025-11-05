@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name =  "gvp"
-version = "0.0.5"
+version = "0.1.0"
 authors = [
     {name = "Martanto", email = "martanto@live.com"},
 ]
@@ -12,27 +12,72 @@ description = "The Volcanoes of the World database is a catalog of Holocene and 
 readme = "README.md"
 license = {file = "LICENSE"}
 keywords = ["gvp", "volcano", "volcanism", "observatory", "volcanoes", "volcanic", "unrest", "database", "holocene"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "xlsxwriter>=3.2.5",
     "openpyxl>=3.1.5",
     "pandas>=2.2.2",
     "importlib-resources",
+    "niquests>=3.15.2",
+    "notebook>=7.4.7",
+    "lxml>=6.0.2",
+    "tabulate>=0.9.0",
 ]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
 
 [project.optional-dependencies]
-base = [
+dev = [
+    "pip",
+    "isort",
+    "black[d]",
     "xlsxwriter",
     "openpyxl",
     "pandas",
     "importlib-resources"
+]
+
+[tool.black]
+line-length = 79
+target-version = ['py310','py311','py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | examples
+  | output
+  | _build
+  | build
+  | dist
+  | venv
+  | \.env
+  | \.flake8
+)/
+'''
+
+[tool.isort]
+profile = "black"
+src_paths = ["src"]
+import_heading_stdlib = "Standard library imports"
+import_heading_thirdparty = "Third party imports"
+import_heading_firstparty = "Project imports"
+known_first_party = [
+	"gvp",
+]
+known_third_party = [
+    "pandas",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=7.0.0",
+    "pip>=25.3",
 ]
 
 [project.urls]
