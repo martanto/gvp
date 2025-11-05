@@ -183,7 +183,9 @@ def download_changelogs(
             excel_filepath = os.path.join(changelogs_dir, filename_excel)
 
             dfs.to_excel(excel_filepath, index=False)
-            dfs.to_markdown(os.path.join(changelogs_dir, filename_md))
+            dfs.to_markdown(
+                os.path.join(changelogs_dir, filename_md), index=False
+            )
 
             if verbose:
                 print("✅")
