@@ -1,5 +1,8 @@
-/output/
+/.idea
+/.test
+/.uv_cache
+/.venv
 /dist/
 /examples/output/
-/.idea
+/output/
 /src/gvp/__pycache__

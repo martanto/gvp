@@ -138,7 +138,7 @@ class GVP(Query):
                 if attempt < retries:
                     if self.verbose:
                         print(
-                            f"⌛ Connection error. Attempt no {attempt+1}. Retrying in {timeout} seconds..."
+                            f"⌛ Connection error. Attempt no {attempt + 1}. Retrying in {timeout} seconds..."
                         )
                     sleep(timeout)
                     attempt += 1

@@ -96,7 +96,7 @@ def download(
             if attempt < retries:
                 if verbose:
                     print(
-                        f"⌛ Connection error. Attempt no {attempt+1}. "
+                        f"⌛ Connection error. Attempt no {attempt + 1}. "
                         f"Retrying in {timeout} seconds..."
                     )
                 sleep(timeout)
@@ -160,7 +160,7 @@ def download_changelogs(
         str: Path to the downloaded file.
     """
     url = url or get_url(database="changelogs")
-    changelogs_dir = os.path.join(os.getcwd(), "changelogs")
+    changelogs_dir = os.path.join(os.getcwd(), "output", "changelogs")
     os.makedirs(changelogs_dir, exist_ok=True)
 
     changelogs_basename = "changelogs"
@@ -183,7 +183,9 @@ def download_changelogs(
             excel_filepath = os.path.join(changelogs_dir, filename_excel)
 
             dfs.to_excel(excel_filepath, index=False)
-            dfs.to_markdown(os.path.join(changelogs_dir, filename_md))
+            dfs.to_markdown(
+                os.path.join(changelogs_dir, filename_md), index=False
+            )
 
             if verbose:
                 print("✅")
@@ -193,7 +195,7 @@ def download_changelogs(
             if attempt < retries:
                 if verbose:
                     print(
-                        f"⌛ Connection error. Attempt no {attempt+1}. "
+                        f"⌛ Connection error. Attempt no {attempt + 1}. "
                         f"Retrying in {timeout} seconds..."
                     )
                 sleep(timeout)
