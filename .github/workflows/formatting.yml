@@ -1,4 +1,4 @@
-name: black-action
+name: "Formatting code"
 
 on: [push, pull_request]
 
@@ -7,21 +7,16 @@ jobs:
     name: runner / black
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
       - name: Check files
         uses: rickstaa/action-black@v1
         id: action_black
         with:
           black_args: "./src"
-      - name: Create Pull Request
+      - name: Commit changes
         if: steps.action_black.outputs.is_formatted == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Format Python"
-          commit-message: ":art: Formatting code"
-          body: |
-            There appear to be some python formatting errors in ${{ github.sha }}. 
-            This pull request fix these issues.
-          base: ${{ github.head_ref }}
-          branch: actions/black
+          commit_message: ":art: Formatting code ${{ github.sha }}"
