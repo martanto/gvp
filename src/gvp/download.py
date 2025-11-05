@@ -160,7 +160,7 @@ def download_changelogs(
         str: Path to the downloaded file.
     """
     url = url or get_url(database="changelogs")
-    changelogs_dir = os.path.join(os.getcwd(), "changelogs")
+    changelogs_dir = os.path.join(os.getcwd(), "output", "changelogs")
     os.makedirs(changelogs_dir, exist_ok=True)
 
     changelogs_basename = "changelogs"
