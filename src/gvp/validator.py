@@ -18,7 +18,9 @@ def validate_comparator(comparator: str) -> bool | Exception:
     return True
 
 
-def validate_column_name(column_name: str, column_list: list[str]) -> bool | Exception:
+def validate_column_name(
+    column_name: str, column_list: list[str]
+) -> bool | Exception:
     """Validating column name.
 
     Args:
@@ -29,5 +31,7 @@ def validate_column_name(column_name: str, column_list: list[str]) -> bool | Exc
         True or raise an Exception.
     """
     if column_name not in column_list:
-        raise ValueError(f"⛔ Column {column_name} is not found in {column_list}")
+        raise ValueError(
+            f"⛔ Column {column_name} is not found in {column_list}"
+        )
     return True
