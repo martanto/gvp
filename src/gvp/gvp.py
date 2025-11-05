@@ -20,9 +20,13 @@ class GVP(Query):
 
     _url = "https://volcano.si.edu/database/list_volcano_holocene_excel.cfm"
     _database_version = "v5.3.1; 6 Aug 2025"
-    _database_version_url = "https://volcano.si.edu/database/database_version.cfm"
+    _database_version_url = (
+        "https://volcano.si.edu/database/database_version.cfm"
+    )
 
-    def __init__(self, output_dir: Optional[str] = None, verbose: bool = False):
+    def __init__(
+        self, output_dir: Optional[str] = None, verbose: bool = False
+    ):
         print(f"Current Version: {gvp.__version__}")
         print(f"Maintained by: {gvp.__author__}")
 
@@ -63,7 +67,9 @@ class GVP(Query):
         Returns:
             pd.DataFrame: GVP dataframe
         """
-        self.file = str(files("gvp.resources").joinpath("gvp_202507041754.xlsx"))
+        self.file = str(
+            files("gvp.resources").joinpath("gvp_202507041754.xlsx")
+        )
         df = pd.read_excel(self.file)
         return df
 
@@ -146,7 +152,9 @@ class GVP(Query):
                 raise ConnectionError(f"❌ Connection error: {e}")
 
         if response.ok:
-            filename = response.headers["content-disposition"].split("filename=")[1]
+            filename = response.headers["content-disposition"].split(
+                "filename="
+            )[1]
             file_path = os.path.join(self.download_dir, str(filename))
 
             with open(file_path, mode="wb") as file:

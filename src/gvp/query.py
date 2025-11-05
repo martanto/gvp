@@ -32,7 +32,9 @@ class Query:
         self.columns_selected = []
         return self
 
-    def compare(self, column_name: str, comparator: str, value: Any) -> pd.DataFrame:
+    def compare(
+        self, column_name: str, comparator: str, value: Any
+    ) -> pd.DataFrame:
         """Translate comparator.
 
         Args:
@@ -51,13 +53,29 @@ class Query:
             df = df[df[column_name] == value]
         if comparator in ["!=", "ne", "not equal", "tidak sama dengan"]:
             df = df[df[column_name] != value]
-        if comparator in [">", "gt", "greater than", "lebih besar", "lebih besar dari"]:
+        if comparator in [
+            ">",
+            "gt",
+            "greater than",
+            "lebih besar",
+            "lebih besar dari",
+        ]:
             df = df[df[column_name] > value]
         if comparator in ["<", "lt", "less than", "kurang", "kurang dari"]:
             df = df[df[column_name] < value]
-        if comparator in [">=", "gte", "greater than equal", "lebih besar sama dengan"]:
+        if comparator in [
+            ">=",
+            "gte",
+            "greater than equal",
+            "lebih besar sama dengan",
+        ]:
             df = df[df[column_name] >= value]
-        if comparator in ["<=", "lte", "less than equal", "kurang dari sama dengan"]:
+        if comparator in [
+            "<=",
+            "lte",
+            "less than equal",
+            "kurang dari sama dengan",
+        ]:
             df = df[df[column_name] <= value]
 
         self.df = pd.DataFrame(df)
@@ -116,7 +134,9 @@ class Query:
         self.df = self.compare(column_name, comparator, value)
         return self
 
-    def unique(self, column_name: str, inplace: Literal[False] = False) -> pd.DataFrame:
+    def unique(
+        self, column_name: str, inplace: Literal[False] = False
+    ) -> pd.DataFrame:
         """Get ALL unique values from a column.
 
         Args:
