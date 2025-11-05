@@ -21,9 +21,7 @@ def extract_version(text: str) -> str | None:
     return None
 
 
-def xml_spreadsheet_to_dataframe(
-    excel_path: str, worksheet: str = None
-) -> pd.DataFrame:
+def xml_to_dataframe(excel_path: str, worksheet: str = None) -> pd.DataFrame:
     """
     Convert XML spreadsheet format to pandas DataFrame
 
@@ -32,7 +30,7 @@ def xml_spreadsheet_to_dataframe(
         worksheet: Excel worksheet name. Default to 'Holocene Volcano List'
 
     Returns:
-        pandas DataFrame with the spreadsheet data
+        pd.DataFrame: pd.DataFrame with the spreadsheet data
     """
     worksheet_name = worksheet
 
@@ -95,6 +93,9 @@ def xml_spreadsheet_to_dataframe(
             version = extract_version(row_data[0])
             if version is not None:
                 print(f"Database version: {version}")
+                print(
+                    f"Changelogs of database: https://volcano.si.edu/gvp_votw.cfm"
+                )
             continue
 
         # Second row contains headers
@@ -122,33 +123,37 @@ def xml_spreadsheet_to_dataframe(
         return pd.DataFrame()
 
 
-def fix_file(filepath: str) -> str:
-    """Only for Windows.
-    Fix broken downloaded Excel file format downloaded from GVP.
+def fix_file(filepath: str) -> str | None:
+    """Fix broken downloaded Excel file format downloaded from GVP.
 
     Args:
         filepath (str): Path to the downloaded Excel file.
 
     Returns:
-        str: Path to the downloaded Excel file.
+        str | None: Path to the downloaded Excel file.
     """
     try:
-        # Third party imports
-        import win32com.client as win32
+        df = xml_to_dataframe(filepath)
 
-        new_filename = filepath + "x"
-        excel = win32.gencache.EnsureDispatch("Excel.Application")
-        workbook = excel.Workbooks.Open(filepath)
-        workbook.SaveAs(new_filename, FileFormat=51)
-        workbook.Close()
-        excel.Application.Quit()
-        os.remove(filepath)
-        return new_filename
+        if not df.empty:
+            basedir = os.path.dirname(filepath)
+            basename = f"fixed_{os.path.basename(filepath)}"
+            basename = basename.replace(".xls", ".xlsx")
+            fixed_filepath = os.path.join(basedir, basename)
+            df.to_excel(fixed_filepath, index=False)
+
+            return fixed_filepath
+
+        print(
+            f"⚠️ Cannot fix broken Excel file. Please fix it manually using MS Excel."
+        )
+
+        return None
     except ImportError as e:
         print(
             f"⚠️ Cannot fix broken Excel file. Please fix it manually using MS Excel. {e}"
         )
-        return filepath
+        return None
 
 
 def slugify(string: str, separator: str = "-") -> str:

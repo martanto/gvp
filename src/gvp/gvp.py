@@ -5,7 +5,7 @@ from time import sleep
 
 # Third party imports
 import pandas as pd
-import requests
+import niquests as requests
 from importlib_resources import files
 from typing_extensions import Optional, Self
 
@@ -147,7 +147,7 @@ class GVP(Query):
 
         if response.ok:
             filename = response.headers["content-disposition"].split("filename=")[1]
-            file_path = os.path.join(self.download_dir, filename)
+            file_path = os.path.join(self.download_dir, str(filename))
 
             with open(file_path, mode="wb") as file:
                 file.write(response.content)
