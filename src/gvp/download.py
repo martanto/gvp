@@ -96,7 +96,7 @@ def download(
             if attempt < retries:
                 if verbose:
                     print(
-                        f"⌛ Connection error. Attempt no {attempt+1}. "
+                        f"⌛ Connection error. Attempt no {attempt + 1}. "
                         f"Retrying in {timeout} seconds..."
                     )
                 sleep(timeout)
@@ -193,7 +193,7 @@ def download_changelogs(
             if attempt < retries:
                 if verbose:
                     print(
-                        f"⌛ Connection error. Attempt no {attempt+1}. "
+                        f"⌛ Connection error. Attempt no {attempt + 1}. "
                         f"Retrying in {timeout} seconds..."
                     )
                 sleep(timeout)

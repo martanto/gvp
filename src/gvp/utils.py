@@ -68,7 +68,7 @@ def xml_to_dataframe(excel_path: str, worksheet: str = None) -> pd.DataFrame:
             data_elem = cell.find(".//ss:Data", namespaces)
             if data_elem is not None:
                 # Get the data type and value
-                data_type = data_elem.get(f'{{{namespaces["ss"]}}}Type')
+                data_type = data_elem.get(f"{{{namespaces['ss']}}}Type")
                 value = data_elem.text
 
                 # Convert based on data type
@@ -93,9 +93,7 @@ def xml_to_dataframe(excel_path: str, worksheet: str = None) -> pd.DataFrame:
             version = extract_version(row_data[0])
             if version is not None:
                 print(f"Database version: {version}")
-                print(
-                    f"Changelogs of database: https://volcano.si.edu/gvp_votw.cfm"
-                )
+                print(f"Changelogs of database: https://volcano.si.edu/gvp_votw.cfm")
             continue
 
         # Second row contains headers
@@ -144,9 +142,7 @@ def fix_file(filepath: str) -> str | None:
 
             return fixed_filepath
 
-        print(
-            f"⚠️ Cannot fix broken Excel file. Please fix it manually using MS Excel."
-        )
+        print(f"⚠️ Cannot fix broken Excel file. Please fix it manually using MS Excel.")
 
         return None
     except ImportError as e:
